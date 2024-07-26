@@ -4,12 +4,12 @@
 - [FastAPI Lifespan Events](#fastapi-lifespan-events)
   - [项目起因:](#项目起因)
   - [Lifespan使用场景:](#lifespan使用场景)
-  - [使用案例:](#使用案例)
+  - [Lifespan使用:](#lifespan使用)
     - [使用规则:](#使用规则)
     - [示例代码:](#示例代码)
   - [写法对比:](#写法对比)
-    - [旧的写法:](#旧的写法)
     - [新的写法:](#新的写法)
+    - [旧的写法:](#旧的写法)
   - [项目运行:](#项目运行)
 
 
@@ -26,17 +26,7 @@
 **加载共享的机器学习模型**: 模型只需加载一次，然后所有的请求都会使用这个已经加载的模型，而不是每次有新请求时都重新加载一次模型。这样可以节省时间和资源。<br>
 
 
-## 使用案例:
-
-让我们从一个使用案例开始，然后看看如何用它来解决问题。假设您有一些机器学习模型，您想用它们来处理请求。🤖<br>
-
-相同的模型在请求之间共享，因此并不是每个请求一个模型，也不是每个用户一个模型或类似的情况。<br>
-
-加载模型可能需要相当长的时间，因为它必须从磁盘读取大量数据。因此您不希望为每个请求都进行加载。
-
-🚨注意:<br>
-
-Lifespan 是指在处理请求之前加载模型，但仅在应用程序开始接收请求之前，而不是在代码加载时。<br>
+## Lifespan使用:
 
 ### 使用规则:
 
@@ -45,6 +35,8 @@ Lifespan 是指在处理请求之前加载模型，但仅在应用程序开始�
 - 在 `yield` 之后的代码将在应用关闭时运行。
 
 ### 示例代码:
+
+加载模型可能需要相当长的时间，因为它必须从磁盘读取大量数据，一个合理的方式是使用 `lifespan` 在应用程序开始接收请求之前加载好模型。示例如下:<br>
 
 ```python
 from contextlib import asynccontextmanager
@@ -72,22 +64,12 @@ async def predict(x: float):
     return {"result": result}
 ```
 
+🚨注意:<br>
+
+Lifespan 是指在处理请求之前加载模型，但仅在应用程序开始接收请求之前，而不是在代码加载时。<br>
+
 
 ## 写法对比:
-
-### 旧的写法:
-
-```python
-@app.on_event("startup")
-async def startup():
-    """利用aiomysql创建mysql连接池"""
-    await mysqler.create_connect_pool()
-
-@app.on_event("shutdown")
-async def shutdown():
-    """销毁mysql连接池"""
-    await mysqler.disconnect()
-```
 
 ### 新的写法:
 
@@ -104,6 +86,21 @@ async def lifespan(app: FastAPI):
 - `lifespan` 是一个异步上下文管理器，用于管理应用程序的生命周期事件。
 - 在 `yield` 之前的代码（`await mysqler.create_connect_pool()`）将在应用启动时运行，创建 MySQL 连接池。
 - 在 `yield` 之后的代码（`await mysqler.disconnect()`）将在应用关闭时运行，销毁 MySQL 连接池。
+
+### 旧的写法:
+
+```python
+@app.on_event("startup")
+async def startup():
+    """利用aiomysql创建mysql连接池"""
+    await mysqler.create_connect_pool()
+
+@app.on_event("shutdown")
+async def shutdown():
+    """销毁mysql连接池"""
+    await mysqler.disconnect()
+```
+
 
 ## 项目运行:
 
