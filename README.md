@@ -30,7 +30,7 @@
 
 ### 使用规则:
 
-- `lifespan` 是一个异步上下文管理器，用于管理应用程序的生命周期事件。
+- 使用异步上下文管理器装饰( `asynccontextmanager` )
 - 在 `yield` 之前的代码将在应用启动时运行。
 - 在 `yield` 之后的代码将在应用关闭时运行。
 
@@ -104,7 +104,7 @@ async def shutdown():
 
 ## 项目运行:
 
-1. 在 `env_config` 文件夹下创建一个配置文件 `.env.local`。
+1. 在项目根目录下创建配置文件 `env_config/.env.local`。
 2. 在 `.env.local` 填入MySQL连接方式，示例如下:
 
 ```log
