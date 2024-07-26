@@ -1,0 +1,6 @@
+aiomysql
+loguru
+fastapi
+pydantic
+python-dotenv
+uvicorn

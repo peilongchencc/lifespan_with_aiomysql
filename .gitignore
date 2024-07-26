@@ -20,3 +20,13 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
+**/.DS_Store
+**/.vscode
+**/__pycache__
+# 忽略项目目录下所有`.env`文件，防止上传到github。
+.env*
+*.log
+*.json
+*.jsonl
+# 忽略 nohup.out 文件
+*.out
