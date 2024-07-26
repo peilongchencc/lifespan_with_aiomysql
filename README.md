@@ -15,7 +15,7 @@
 
 ## 项目起因:
 
-过往，FastAPI在应用启动前，或应用关闭后执行的事件处理器（函数）为`@app.on_event("startup")` 和 `@app.on_event("shutdown")`，但在最新版FastAPI中已经说明 `@app.on_event("startup")` 和 `@app.on_event("shutdown")` 要废弃了，这里介绍下新的写法。<br>
+过往，FastAPI在应用启动前，或应用关闭后执行的事件处理器（函数）为`@app.on_event("startup")` 和 `@app.on_event("shutdown")`，但在最新版FastAPI中已经说明这两种方法即将废弃，这里介绍下新的写法。<br>
 
 
 ## Lifespan使用场景:
