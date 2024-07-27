@@ -30,7 +30,7 @@
 
 ### 使用规则:
 
-- 使用异步上下文管理器装饰( `asynccontextmanager` )
+- 使用异步上下文管理器( `asynccontextmanager` )装饰。
 - 在 `yield` 之前的代码将在应用启动时运行。
 - 在 `yield` 之后的代码将在应用关闭时运行。
 
@@ -112,19 +112,50 @@ async def shutdown():
 MYSQL_DB_HOST="localhost"
 MYSQL_DB_PORT="3306"
 MYSQL_DB_USER="root"
-MYSQL_DB_PASSWORD="123456"
+MYSQL_DB_PASSWORD="Flameaway3."
 # mysql数据库名称
-MYSQL_DB_NAME="meta_data"
+MYSQL_DB_NAME="irmdata"
 ```
 
-3. 终端运行下列指令，安装依赖项:
+3. 在MySQL数据库中创建`chat_history`表，SQL语句如下:
+
+```sql
+CREATE TABLE chat_history (
+  `id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '主键',
+  `user_id` INT NOT NULL COMMENT '客户id',
+  `conversation_id` VARCHAR(50) NOT NULL COMMENT '会话id',
+  `role` ENUM('user', 'assistant') NOT NULL COMMENT '角色',
+  `content` TEXT NOT NULL COMMENT '会话内容',
+  `entry_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '信息录入时间',
+  `modify_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '字段修改时间',
+  INDEX idx_user_conv (`user_id`, `conversation_id`)
+) COMMENT='聊天记录表';
+```
+
+"INDEX idx_user_conv (`user_id`, `conversation_id`)": 表示创建组合索引，加速查询。<br>
+
+4. 终端运行下列指令，安装依赖项:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-4. 运行主文件:
+5. 运行主文件:
 
 ```bash
 python main.py
+```
+
+6. 运行测试脚本查看效果:
+
+```bash
+python tests/test_chat_history.py
+```
+
+运行效果如下:<br>
+
+```log
+(langchain) root@iZ2zea5v77oawjy2qz7xxx:/lifespan_with_aiomysql# python tests/test_chat_history.py 
+{'code': 0, 'msg': '信息存储成功', 'data': {'status': True}} <class 'dict'>
+{'code': 0, 'msg': '获取用户聊天记录成功', 'data': {'chat_history': [{'role': 'user', 'content': '请介绍一下北京'}, {'role': 'assistant', 'content': '北京是...'}]}} <class 'dict'>
 ```
