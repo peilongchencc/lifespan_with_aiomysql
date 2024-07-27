@@ -1,7 +1,7 @@
-# Lifespan wit AIOMySQL
+# Lifespan with AIOMySQL
 
 本项目使用`aiomysql` 创建连接池，介绍 FastAPI 中 Lifespan Events(生命周期事件) 的使用。<br>
-- [Lifespan wit AIOMySQL](#lifespan-wit-aiomysql)
+- [Lifespan with AIOMySQL](#lifespan-with-aiomysql)
   - [项目起因:](#项目起因)
   - [Lifespan使用场景:](#lifespan使用场景)
   - [Lifespan使用:](#lifespan使用)
